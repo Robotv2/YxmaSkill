@@ -1,0 +1,6 @@
+name: YxmaSkill
+version: '${project.version}'
+main: fr.robotv2.yxmaskill.YxmaSkill
+api-version: 1.16
+authors: [ Robotv2 ]
+description: A skill plugin for Yxma
