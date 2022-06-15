@@ -9,12 +9,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 import java.util.Collection;
+import java.util.Objects;
 
 public class CircleSkill extends Skill {
 
-    private final double RADIUS = 5D;
+    private final double RADIUS = 10D;
     private final double DAMAGE = 2.5D;
 
     public CircleSkill() {
@@ -28,6 +30,11 @@ public class CircleSkill extends Skill {
         final Collection<LivingEntity> entities = invoker.getPlayer().getWorld().getNearbyLivingEntities(playerLoc, RADIUS);
 
         for(LivingEntity entity : entities) {
+
+            if(entity instanceof Player target && Objects.equals(target.getName(), invoker.getPlayer().getName())) {
+                continue;
+            }
+
             entity.damage(DAMAGE, invoker.getPlayer());
         }
 
@@ -57,8 +64,11 @@ public class CircleSkill extends Skill {
                         sin[degree] = z;
                     }
 
+                    x = x * RADIUS;
+                    z = z * RADIUS;
+
                     playerLoc.add(x,0,z);
-                    ParticleUtil.sendToAllPlayers(Particle.FLAME, playerLoc);
+                    ParticleUtil.sendToAllPlayers(Particle.VILLAGER_HAPPY, playerLoc);
                     playerLoc.subtract(x,0,z);
                 }
             }, i * 2);
