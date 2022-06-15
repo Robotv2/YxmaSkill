@@ -23,7 +23,7 @@ public abstract class Skill implements Listener {
     }
 
     /**
-     * trigger whenever an entity cast the skill.
+     * trigger whenever a player cast the skill.
      */
     public abstract boolean execute(GamePlayer invoker);
 
@@ -40,7 +40,7 @@ public abstract class Skill implements Listener {
         return cooldown;
     }
 
-    public ClassType getClassType() {
+    public ClassType getRequiredClass() {
         return classType;
     }
 }
