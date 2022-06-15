@@ -8,19 +8,19 @@ public class LevelUtil {
     public static final int LEVEL_MAX = 30;
 
     private static double X;
-    private static double Y;
+    private static int Y;
     private static double Z;
+    private static double W;
 
     public static void loadConstant(Config config) {
         final FileConfiguration configuration = config.get();
         X = configuration.getDouble("level-constant.X");
-        Y = configuration.getDouble("level-constant.Y");
+        Y = configuration.getInt("level-constant.Y");
         Z = configuration.getDouble("level-constant.Z");
+        W = configuration.getDouble("level-constant.W");
     }
 
-    // (x * niveau^2) + (y * niveau) + z
-
     public static double requiredExp(int level) {
-        return (X * (level^2)) + (Y * level) + Z;
+        return X * Math.pow((level + Y), 2) + Z * level + W;
     }
 }

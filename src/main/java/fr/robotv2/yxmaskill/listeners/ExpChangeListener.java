@@ -15,19 +15,22 @@ public class ExpChangeListener implements Listener {
         final GamePlayer gamePlayer = GamePlayer.getGamePlayer(event.getPlayer());
 
         final int level = gamePlayer.getLevel();
+        final int amount = event.getAmount();
+        event.setAmount(0);
 
         if(level >= LevelUtil.LEVEL_MAX) {
             return;
         }
 
-        final double currentExp = gamePlayer.getExp() + event.getAmount();
+        final double currentExp = gamePlayer.getExp() + amount;
         final double expToLevelUp = LevelUtil.requiredExp(level + 1);
-
-        gamePlayer.setExp(currentExp);
 
         if(currentExp >= expToLevelUp) {
             gamePlayer.setLevel(level + 1);
+            gamePlayer.setExp(0);
             Bukkit.getPluginManager().callEvent(new PlayerLevelUpEvent(gamePlayer));
+        } else {
+            gamePlayer.setExp(currentExp);
         }
 
         gamePlayer.refreshExpBar();

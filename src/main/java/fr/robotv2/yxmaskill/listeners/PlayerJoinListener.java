@@ -21,7 +21,10 @@ public record PlayerJoinListener(YxmaSkill plugin) implements Listener {
             gamePlayer = new GamePlayer(playerUUID, ClassType.EPEISTE);
         }
 
+        GamePlayer.registerGamePlayer(gamePlayer);
         gamePlayer.refreshHearts();
         gamePlayer.refreshExpBar();
+
+        plugin.getLogger().info(String.format("Data for the player %s has been loaded successfully.", event.getPlayer().getName()));
     }
 }

@@ -3,6 +3,10 @@ package fr.robotv2.yxmaskill;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import fr.robotv2.yxmaskill.command.YxmaSkillCommand;
+import fr.robotv2.yxmaskill.listeners.ExpChangeListener;
+import fr.robotv2.yxmaskill.listeners.LevelUpListener;
+import fr.robotv2.yxmaskill.listeners.PlayerJoinListener;
+import fr.robotv2.yxmaskill.listeners.PlayerQuitListener;
 import fr.robotv2.yxmaskill.skill.Skill;
 import fr.robotv2.yxmaskill.skill.SkillManager;
 import fr.robotv2.yxmaskill.skill.epeiste.CircleSkill;
@@ -11,6 +15,7 @@ import fr.robotv2.yxmaskill.util.FileUtil;
 import fr.robotv2.yxmaskill.util.config.Config;
 import fr.robotv2.yxmaskill.util.config.ConfigAPI;
 import fr.robotv2.yxmaskill.util.rpgutil.LevelUtil;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
@@ -38,6 +43,7 @@ public final class YxmaSkill extends JavaPlugin {
 
         this.loadDataManager();
         this.loadSkills();
+        this.loadListeners();
         this.loadCommands();
 
         LevelUtil.loadConstant(getLevelConfiguration());
@@ -84,6 +90,14 @@ public final class YxmaSkill extends JavaPlugin {
         //EPEISTE
         getSkillManager().registerSkill(new DashSkill());
         getSkillManager().registerSkill(new CircleSkill());
+    }
+
+    private void loadListeners() {
+        final PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(new ExpChangeListener(), this);
+        pm.registerEvents(new LevelUpListener(), this);
+        pm.registerEvents(new PlayerJoinListener(this), this);
+        pm.registerEvents(new PlayerQuitListener(this), this);
     }
 
     private void loadCommands() {

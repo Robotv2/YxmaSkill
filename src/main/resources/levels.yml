@@ -1,4 +1,5 @@
 level-constant:
-  X: 10.5
+  X: 10
   Y: 5
-  Z: 5
+  Z: 3
+  W: 4

@@ -3,9 +3,9 @@ package fr.robotv2.yxmaskill.player;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import fr.robotv2.yxmaskill.YxmaSkill;
 import fr.robotv2.yxmaskill.classes.ClassType;
 import fr.robotv2.yxmaskill.skill.Skill;
-import fr.robotv2.yxmaskill.util.ColorUtil;
 import fr.robotv2.yxmaskill.util.rpgutil.LevelUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -37,7 +37,7 @@ public class GamePlayer {
     private double exp;
 
     @DatabaseField(columnName = "skills-levels", dataType = DataType.SERIALIZABLE)
-    private final Map<String, Integer> skillLevels = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Integer> skillLevels = new ConcurrentHashMap<>();
 
     private final Map<String, Long> caches = new ConcurrentHashMap<>();
 
@@ -60,6 +60,10 @@ public class GamePlayer {
 
     public ClassType getClassType() {
         return type;
+    }
+
+    public void save() {
+        YxmaSkill.getInstance().getDataManager().saveGamePlayer(this);
     }
 
     // <<- LEVEL & EXP ->>
@@ -107,7 +111,7 @@ public class GamePlayer {
         if(player == null || !player.isOnline()) return;
         final AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if(attributeInstance == null) return;
-        attributeInstance.setBaseValue(attributeInstance.getDefaultValue() + getLevel());
+        attributeInstance.setBaseValue(attributeInstance.getDefaultValue() + (getLevel() - 1));
     }
 
     public void refreshExpBar() {
@@ -125,7 +129,12 @@ public class GamePlayer {
         final double expToLevelUp = LevelUtil.requiredExp(level + 1);
 
         player.setLevel(level);
-        player.setExp((float) ((getExp() * 100) / expToLevelUp));
+
+        if(getExp() == 0) {
+            player.setExp(0);
+        } else {
+            player.setExp((float) (getExp() / (expToLevelUp)));
+        }
     }
 
     // <<- COOLDOWN ->>
@@ -160,6 +169,10 @@ public class GamePlayer {
 
     public static void registerGamePlayer(GamePlayer gamePlayer) {
         gamePlayers.put(gamePlayer.playerUUID, gamePlayer);
+    }
+
+    public static void unregisterGamePlayer(GamePlayer gamePlayer) {
+        gamePlayers.remove(gamePlayer.playerUUID);
     }
 
     public static GamePlayer getGamePlayer(UUID playerUUID) {
