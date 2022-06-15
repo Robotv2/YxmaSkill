@@ -32,6 +32,10 @@ public final class YxmaSkill extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        ConfigAPI.init(this);
+        getSkillConfiguration().setup();
+        getLevelConfiguration().setup();
+
         this.loadDataManager();
         this.loadSkills();
         this.loadCommands();
