@@ -3,7 +3,7 @@ package fr.robotv2.yxmaskill.util;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Path {
@@ -16,7 +16,7 @@ public class Path {
      * @return A list of all the locations between the locations
      */
     public static List<Location> getPath(Location start, Location end, double step) {
-        final List<Location> locs = new ArrayList<>();
+        final List<Location> locs = new LinkedList<>();
         locs.add(start);
         final Vector v = end.clone().subtract(start).toVector().normalize().multiply(step);
         Location current = start.clone();

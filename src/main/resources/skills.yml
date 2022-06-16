@@ -1,0 +1,17 @@
+epeiste:
+
+  epeiste-dash:
+    display: "&6&lDASH"
+    description:
+      - "&7Foncez vers votre ennemi"
+      - "&7et infligez-lui des lourds dégâts !"
+    damage: 5
+    max-radius-entity: 10
+
+  epeiste-circle:
+    display: "&e&lCIRCLE"
+    description:
+      - "&7Attaque circulaire tout autour"
+      - "&7de vous !"
+    damage: 5
+    circle-radius: 7.5

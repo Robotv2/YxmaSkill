@@ -14,10 +14,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -34,10 +31,13 @@ public class GamePlayer {
     private int level = 1;
 
     @DatabaseField(columnName = "exp")
-    private double exp;
+    private double exp = 0;
 
     @DatabaseField(columnName = "skills-levels", dataType = DataType.SERIALIZABLE)
     private final ConcurrentHashMap<String, Integer> skillLevels = new ConcurrentHashMap<>();
+
+    @DatabaseField(columnName = "point-competences")
+    private int compPoint = 0;
 
     private final Map<String, Long> caches = new ConcurrentHashMap<>();
 
@@ -87,7 +87,7 @@ public class GamePlayer {
     // <<- SKILL ->>
 
     public int getSkillLevel(Skill skill) {
-        return this.skillLevels.getOrDefault(skill.getId(), 0);
+        return this.skillLevels.getOrDefault(skill.getId(), 1);
     }
 
     public void setSkillLevel(Skill skill, int value) {
@@ -106,18 +106,26 @@ public class GamePlayer {
 
     // <<- REFRESH ->>
 
-    public void refreshHearts() {
+    public void heal() {
+        if(!isValid()) return;
         final Player player = getPlayer();
-        if(player == null || !player.isOnline()) return;
+        final AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if(attributeInstance == null) return;
+        player.setHealth(attributeInstance.getBaseValue());
+    }
+
+    public void refreshHearts() {
+        if(!isValid()) return;
+        final Player player = getPlayer();
         final AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if(attributeInstance == null) return;
         attributeInstance.setBaseValue(attributeInstance.getDefaultValue() + (getLevel() - 1));
     }
 
     public void refreshExpBar() {
-        final Player player = getPlayer();
-        if(player == null || !player.isOnline()) return;
+        if(!isValid()) return;
 
+        final Player player = getPlayer();
         final int level = getLevel();
 
         if(level >= LevelUtil.LEVEL_MAX) {
@@ -137,6 +145,23 @@ public class GamePlayer {
         }
     }
 
+    public void refreshSkillsItem() {
+        if(!isValid()) return;
+
+        final Player player = getPlayer();
+        final LinkedList<Skill> skills = getClassType().getSkills();
+
+        for(int i = 6; i <= 8; i++) {
+            final Skill skill = skills.pollFirst();
+
+            if(skill == null) {
+                continue;
+            }
+
+            player.getInventory().setItem(i, skill.getItem(this));
+        }
+    }
+
     // <<- COOLDOWN ->>
 
     public long getCooldown(Skill skill) {
@@ -147,12 +172,43 @@ public class GamePlayer {
         this.caches.put(skill.getId(), System.currentTimeMillis());
     }
 
+    public double getRemainingCooldown(Skill skill) {
+        final long current = getCooldown(skill);
+        if(current == -1) {
+            return 0L;
+        } else {
+            return (skill.getCooldown() * 1000) - (System.currentTimeMillis() - current) / 1000D;
+        }
+    }
+
     public boolean canCast(Skill skill) {
         final long current = getCooldown(skill);
         if(current == -1) {
             return true;
         } else {
-            return (System.currentTimeMillis() - current) >= skill.getCooldown() * 1000L;
+            return System.currentTimeMillis() - current >= skill.getCooldown() * 1000L;
+        }
+    }
+
+    // <<- COMP POINT ->>
+
+    public int getCompPoint() {
+        return compPoint;
+    }
+
+    public void setCompPoint(int value) {
+        this.compPoint = value;
+    }
+
+    public void addCompPoint(int value) {
+        this.compPoint += value;
+    }
+
+    public void removeCompPoint(int value) {
+        if(this.compPoint - value < 0) {
+            this.compPoint = 0;
+        } else {
+            this.compPoint -= value;
         }
     }
 

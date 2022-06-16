@@ -1,5 +1,6 @@
 package fr.robotv2.yxmaskill.skill.epeiste;
 
+import de.slikey.effectlib.effect.LineEffect;
 import fr.robotv2.yxmaskill.YxmaSkill;
 import fr.robotv2.yxmaskill.classes.ClassType;
 import fr.robotv2.yxmaskill.player.GamePlayer;
@@ -21,8 +22,8 @@ import java.util.List;
 
 public class DashSkill extends Skill implements Targettable {
 
-    private final double RADIUS = 7.5D;
-    private final double DAMAGE = 2.5D;
+    private double RADIUS;
+    private double DAMAGE;
 
     private enum TeleportLocation {
         RIGHT, LEFT;
@@ -51,6 +52,8 @@ public class DashSkill extends Skill implements Targettable {
 
     public DashSkill() {
         super("epeiste-dash", ClassType.EPEISTE);
+        DAMAGE = getSection().getDouble("damage");
+        RADIUS = getSection().getDouble("max-radius-entity");
     }
 
     @Override
@@ -74,7 +77,7 @@ public class DashSkill extends Skill implements Targettable {
         }
 
         final Vector inverseDirectionVec = playerLocation.getDirection().normalize().multiply(distance + 5);
-        Location behindLocation = playerLocation.add(inverseDirectionVec);
+        Location behindLocation = playerLocation.clone().add(inverseDirectionVec);
         boolean safe = false;
 
         for(int i = 0; i < 4; i++) {
@@ -116,7 +119,6 @@ public class DashSkill extends Skill implements Targettable {
                 ParticleUtil.sendToAllPlayers(Particle.VILLAGER_HAPPY, locations);
             }, i * 2);
         }
-
 
         return true;
     }

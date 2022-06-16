@@ -2,11 +2,9 @@ package fr.robotv2.yxmaskill;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import de.slikey.effectlib.EffectManager;
 import fr.robotv2.yxmaskill.command.YxmaSkillCommand;
-import fr.robotv2.yxmaskill.listeners.ExpChangeListener;
-import fr.robotv2.yxmaskill.listeners.LevelUpListener;
-import fr.robotv2.yxmaskill.listeners.PlayerJoinListener;
-import fr.robotv2.yxmaskill.listeners.PlayerQuitListener;
+import fr.robotv2.yxmaskill.listeners.*;
 import fr.robotv2.yxmaskill.skill.Skill;
 import fr.robotv2.yxmaskill.skill.SkillManager;
 import fr.robotv2.yxmaskill.skill.epeiste.CircleSkill;
@@ -28,6 +26,7 @@ public final class YxmaSkill extends JavaPlugin {
     private static YxmaSkill instance;
     private final SkillManager skillManager = new SkillManager();
     private final DataManager dataManager = new DataManager();
+    private final EffectManager effectManager = new EffectManager(this);
 
     public static YxmaSkill getInstance() {
         return instance;
@@ -56,9 +55,12 @@ public final class YxmaSkill extends JavaPlugin {
     }
 
     public void onReload() {
+
         getSkillConfiguration().reload();
         getLevelConfiguration().reload();
         LevelUtil.loadConstant(getLevelConfiguration());
+
+        this.loadSkills();
     }
 
     // <<- GETTERS ->>
@@ -69,6 +71,10 @@ public final class YxmaSkill extends JavaPlugin {
 
     public DataManager getDataManager() {
         return dataManager;
+    }
+
+    public EffectManager getEffectManager() {
+        return effectManager;
     }
 
     // <<- LOADERS ->>
@@ -87,6 +93,7 @@ public final class YxmaSkill extends JavaPlugin {
     }
 
     private void loadSkills() {
+        getSkillManager().clearSkills();
         //EPEISTE
         getSkillManager().registerSkill(new DashSkill());
         getSkillManager().registerSkill(new CircleSkill());
@@ -98,6 +105,7 @@ public final class YxmaSkill extends JavaPlugin {
         pm.registerEvents(new LevelUpListener(), this);
         pm.registerEvents(new PlayerJoinListener(this), this);
         pm.registerEvents(new PlayerQuitListener(this), this);
+        pm.registerEvents(new SkillBookListener(this), this);
     }
 
     private void loadCommands() {

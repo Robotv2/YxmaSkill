@@ -26,16 +26,17 @@ public class CircleSkill extends Skill {
     @Override
     public boolean execute(GamePlayer invoker) {
 
+        final Player invokerPlayer = invoker.getPlayer();
         final Location playerLoc = invoker.getPlayer().getLocation();
         final Collection<LivingEntity> entities = invoker.getPlayer().getWorld().getNearbyLivingEntities(playerLoc, RADIUS);
 
         for(LivingEntity entity : entities) {
 
-            if(entity instanceof Player target && Objects.equals(target.getName(), invoker.getPlayer().getName())) {
+            if(entity instanceof Player target && Objects.equals(target.getName(), invokerPlayer.getName())) {
                 continue;
             }
 
-            entity.damage(DAMAGE, invoker.getPlayer());
+            entity.damage(DAMAGE, invokerPlayer);
         }
 
         final double[] radians = new double[360];

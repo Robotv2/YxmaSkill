@@ -40,9 +40,15 @@ public class SkillManager {
         return getSkills().stream().map(Skill::getId).toList();
     }
 
+    public boolean exist(String id) {
+        return this.skills.containsKey(id.toLowerCase());
+    }
+
     public void cast(GamePlayer invoker, Skill skill, boolean bypassCooldown) {
 
         if(!bypassCooldown && !invoker.canCast(skill)) {
+            final double remaining = (Math.round(invoker.getRemainingCooldown(skill) * 100)) / 100D;
+            ColorUtil.sendMessage(invoker, "&cMerci d'attendre " + remaining + " secondes avant de ré-utiliser ce skill.");
             return;
         }
 

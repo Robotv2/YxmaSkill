@@ -10,6 +10,8 @@ public class LevelUpListener implements Listener {
     @EventHandler
     public void onLevelUp(PlayerLevelUpEvent event) {
         final GamePlayer gamePlayer = event.getGamePlayer();
+
         gamePlayer.refreshHearts();
+        gamePlayer.addCompPoint(1);
     }
 }
