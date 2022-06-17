@@ -4,6 +4,7 @@ import fr.robotv2.yxmaskill.YxmaSkill;
 import fr.robotv2.yxmaskill.player.GamePlayer;
 import fr.robotv2.yxmaskill.skill.Skill;
 import fr.robotv2.yxmaskill.util.ColorUtil;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +13,7 @@ import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
@@ -76,12 +78,7 @@ public record SkillBookListener(YxmaSkill plugin) implements Listener {
     }
 
     @EventHandler
-    public void onDrop(EntityDropItemEvent event) {
-
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-
+    public void onDrop(PlayerDropItemEvent event) {
         if (isSkillBook(event.getItemDrop().getItemStack())) {
             event.setCancelled(true);
         }
@@ -90,9 +87,14 @@ public record SkillBookListener(YxmaSkill plugin) implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
 
+        final Player player = (Player) event.getWhoClicked();
         final Inventory inventory = event.getClickedInventory();
 
         if (inventory == null || inventory.getType() != InventoryType.PLAYER) {
+            return;
+        }
+
+        if(player.getGameMode() == GameMode.CREATIVE) {
             return;
         }
 
