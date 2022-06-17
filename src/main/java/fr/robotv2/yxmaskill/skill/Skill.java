@@ -34,7 +34,7 @@ public abstract class Skill implements Listener {
         this.id = id;
         this.cooldown = cooldown;
         this.classType = type;
-        this.section = plugin.getSkillConfiguration().get().getConfigurationSection(type.toLowerCase() + "." + id);
+        this.section = plugin.getSkillConfiguration().get().getConfigurationSection("skills." + id);
         assert section != null : "The configuration section for" + id  + "doesn't exist.";
         this.display = this.section.getString("display");
         this.lore = this.section.getStringList("description");
@@ -68,6 +68,10 @@ public abstract class Skill implements Listener {
 
     public ConfigurationSection getSection() {
         return section;
+    }
+
+    public YxmaSkill getPlugin() {
+        return plugin;
     }
 
     public ItemStack getItem(GamePlayer gamePlayer) {

@@ -2,14 +2,19 @@ package fr.robotv2.yxmaskill.listeners.classes;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.slikey.effectlib.effect.ArcEffect;
-import de.slikey.effectlib.effect.SphereEffect;
-import fr.robotv2.yxmaskill.YxmaSkill;
 import fr.robotv2.yxmaskill.classes.ClassType;
+import fr.robotv2.yxmaskill.events.PlayerLevelUpEvent;
+import fr.robotv2.yxmaskill.player.GamePlayer;
+import fr.robotv2.yxmaskill.util.ParticleUtil;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.EnumSet;
@@ -34,7 +39,24 @@ public class EpeisteListener extends ClassesListener {
         super(ClassType.EPEISTE);
     }
 
+    private void refreshStrength(GamePlayer gamePlayer) {
+        final ConfigurationSection section = gamePlayer.getClassType().getSection();
 
+        if(section == null || !gamePlayer.isValid()) {
+            return;
+        }
+
+        final double pourcentage = section.getDouble("strength." + gamePlayer.getLevel(), -1);
+
+        if(pourcentage == -1) {
+            return;
+        }
+
+        final AttributeInstance instance = gamePlayer.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        if(instance == null) return;
+
+        instance.setBaseValue(instance.getDefaultValue() * (1 + (pourcentage / 100)));
+    }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
@@ -52,6 +74,27 @@ public class EpeisteListener extends ClassesListener {
             currentCombo = 1;
         }
 
+        ParticleUtil.comboLine(player, currentCombo);
+        ++currentCombo;
+        combo.put(player.getName(), currentCombo);
+    }
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void onJoin(PlayerJoinEvent event) {
+        final Player player = event.getPlayer();
+
+        if(!this.hasClass(player)) {
+            return;
+        }
+
+        final GamePlayer gamePlayer = GamePlayer.getGamePlayer(player);
+        this.refreshStrength(gamePlayer);
+    }
+
+    @EventHandler
+    public void onLevelUp(PlayerLevelUpEvent event) {
+        final GamePlayer player = event.getGamePlayer();
+        if(!this.hasClass(player)) return;
+        this.refreshStrength(player);
     }
 }

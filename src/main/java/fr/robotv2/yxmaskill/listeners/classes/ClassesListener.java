@@ -13,6 +13,10 @@ public abstract class ClassesListener implements Listener {
     }
 
     public boolean hasClass(Player player) {
-        return GamePlayer.getGamePlayer(player).getClassType() == type;
+        return hasClass(GamePlayer.getGamePlayer(player));
+    }
+
+    public boolean hasClass(GamePlayer gamePlayer) {
+        return gamePlayer.getClassType() == type;
     }
 }

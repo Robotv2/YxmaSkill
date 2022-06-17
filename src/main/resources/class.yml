@@ -1,0 +1,9 @@
+class:
+  epeiste:
+    display: "&e&lEPEISTE"
+    skills:
+      - epeiste-dash
+      - epeiste-circle
+    strength:
+      15: 20
+      30: 40

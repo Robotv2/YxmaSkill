@@ -1,5 +1,4 @@
-epeiste:
-
+skills:
   epeiste-dash:
     display: "&6&lDASH"
     description:
@@ -7,7 +6,6 @@ epeiste:
       - "&7et infligez-lui des lourds dégâts !"
     damage: 5
     max-radius-entity: 10
-
   epeiste-circle:
     display: "&e&lCIRCLE"
     description:

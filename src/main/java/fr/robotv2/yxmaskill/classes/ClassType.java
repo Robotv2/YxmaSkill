@@ -3,32 +3,51 @@ package fr.robotv2.yxmaskill.classes;
 import fr.robotv2.yxmaskill.YxmaSkill;
 import fr.robotv2.yxmaskill.skill.Skill;
 import fr.robotv2.yxmaskill.skill.SkillManager;
-import revxrsal.commands.util.Collections;
+import fr.robotv2.yxmaskill.util.ColorUtil;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.LinkedList;
 
 public enum ClassType {
 
-    EPEISTE(Collections.linkedListOf("epeiste-dash", "", "epeiste-circle")),
-    PUGILISTE(Collections.linkedListOf()),
-    SNIPER(Collections.linkedListOf());
+    EPEISTE(),
+    PUGILISTE(),
+    SNIPER(),
+    NONE();
 
-    private final LinkedList<String> linkedSkills;
-    ClassType(LinkedList<String> linkedSkills) {
-        this.linkedSkills = linkedSkills;
+    private final ConfigurationSection section;
+    ClassType() {
+        final FileConfiguration configuration = YxmaSkill.getInstance().getClassConfiguration().get();
+        this.section = configuration.getConfigurationSection("class." + toLowerCase());
     }
 
     public String toLowerCase() {
         return toString().toLowerCase();
     }
 
+    public ConfigurationSection getSection() {
+        return section;
+    }
+
+    public String getDisplay() {
+        return ColorUtil.colorize(getSection().getString("display"));
+    }
+
     public LinkedList<Skill> getSkills() {
-        final SkillManager skillManager = YxmaSkill.getInstance().getSkillManager();
+
         final LinkedList<Skill> result = new LinkedList<>();
-        linkedSkills.stream()
+        if(section == null) {
+            return result;
+        }
+
+        final SkillManager skillManager = YxmaSkill.getInstance().getSkillManager();
+
+        getSection().getStringList("skills").stream()
                 .filter(skillManager::exist)
                 .map(skillManager::getSkill)
                 .forEachOrdered(result::add);
+
         return result;
     }
 }

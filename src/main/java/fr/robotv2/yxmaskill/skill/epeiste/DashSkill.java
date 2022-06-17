@@ -1,6 +1,5 @@
 package fr.robotv2.yxmaskill.skill.epeiste;
 
-import de.slikey.effectlib.effect.LineEffect;
 import fr.robotv2.yxmaskill.YxmaSkill;
 import fr.robotv2.yxmaskill.classes.ClassType;
 import fr.robotv2.yxmaskill.player.GamePlayer;
@@ -22,8 +21,8 @@ import java.util.List;
 
 public class DashSkill extends Skill implements Targettable {
 
-    private double RADIUS;
-    private double DAMAGE;
+    private final double RADIUS;
+    private final double DAMAGE;
 
     private enum TeleportLocation {
         RIGHT, LEFT;

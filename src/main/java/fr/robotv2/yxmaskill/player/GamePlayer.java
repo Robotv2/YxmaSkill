@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -87,7 +88,7 @@ public class GamePlayer {
     // <<- SKILL ->>
 
     public int getSkillLevel(Skill skill) {
-        return this.skillLevels.getOrDefault(skill.getId(), 1);
+        return this.skillLevels.getOrDefault(skill.getId(), 0);
     }
 
     public void setSkillLevel(Skill skill, int value) {
@@ -105,14 +106,6 @@ public class GamePlayer {
     }
 
     // <<- REFRESH ->>
-
-    public void heal() {
-        if(!isValid()) return;
-        final Player player = getPlayer();
-        final AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if(attributeInstance == null) return;
-        player.setHealth(attributeInstance.getBaseValue());
-    }
 
     public void refreshHearts() {
         if(!isValid()) return;
@@ -135,7 +128,6 @@ public class GamePlayer {
         }
 
         final double expToLevelUp = LevelUtil.requiredExp(level + 1);
-
         player.setLevel(level);
 
         if(getExp() == 0) {
@@ -217,6 +209,14 @@ public class GamePlayer {
     public boolean isValid() {
         final Player player = getPlayer();
         return player != null && player.isOnline();
+    }
+
+    public void heal() {
+        if(!isValid()) return;
+        final Player player = getPlayer();
+        final AttributeInstance attributeInstance = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if(attributeInstance == null) return;
+        player.setHealth(attributeInstance.getBaseValue());
     }
 
     // <<- STATIC METHOD ->>

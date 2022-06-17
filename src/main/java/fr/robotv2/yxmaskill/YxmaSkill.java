@@ -39,6 +39,7 @@ public final class YxmaSkill extends JavaPlugin {
         ConfigAPI.init(this);
         getSkillConfiguration().setup();
         getLevelConfiguration().setup();
+        getClassConfiguration().setup();
 
         this.loadDataManager();
         this.loadSkills();
@@ -58,6 +59,7 @@ public final class YxmaSkill extends JavaPlugin {
 
         getSkillConfiguration().reload();
         getLevelConfiguration().reload();
+        getClassConfiguration().reload();
         LevelUtil.loadConstant(getLevelConfiguration());
 
         this.loadSkills();
@@ -124,5 +126,9 @@ public final class YxmaSkill extends JavaPlugin {
 
     public Config getLevelConfiguration() {
         return ConfigAPI.getConfig("levels");
+    }
+
+    public Config getClassConfiguration() {
+        return ConfigAPI.getConfig("class");
     }
 }
