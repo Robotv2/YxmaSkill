@@ -47,8 +47,8 @@ public class SkillManager {
     public void cast(GamePlayer invoker, Skill skill, boolean bypassCooldown) {
 
         if(!bypassCooldown && !invoker.canCast(skill)) {
-            final double remaining = (Math.round(invoker.getRemainingCooldown(skill) * 100)) / 100D;
-            ColorUtil.sendMessage(invoker, "&cMerci d'attendre " + remaining + " secondes avant de ré-utiliser ce skill.");
+            final double remaining = (Math.round(invoker.getRemainingCooldown(skill) * 10)) / 10D;
+            ColorUtil.sendMessage(invoker, "&cMerci d'attendre " + remaining + " seconde(s) avant de ré-utiliser ce skill.");
             return;
         }
 

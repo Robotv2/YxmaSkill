@@ -177,7 +177,7 @@ public class GamePlayer {
         if(current == -1) {
             return 0L;
         } else {
-            return (skill.getCooldown() * 1000) - (System.currentTimeMillis() - current) / 1000D;
+            return (skill.getCooldown() - (System.currentTimeMillis() - current) / 1000D);
         }
     }
 
