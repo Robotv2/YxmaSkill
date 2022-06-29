@@ -5,6 +5,7 @@ import fr.robotv2.yxmaskill.player.GamePlayer;
 import fr.robotv2.yxmaskill.skill.Skill;
 import fr.robotv2.yxmaskill.util.ColorUtil;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -78,8 +79,10 @@ public record SkillBookListener(YxmaSkill plugin) implements Listener {
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
-        if (isSkillBook(event.getItemDrop().getItemStack())) {
-            event.setCancelled(true);
+        final ItemStack drop = event.getItemDrop().getItemStack();
+        if (isSkillBook(drop) || drop.getType() == Material.BARRIER) {
+            event.getItemDrop().remove();
+            GamePlayer.getGamePlayer(event.getPlayer()).refreshSkillsItem();
         }
     }
 
@@ -88,6 +91,7 @@ public record SkillBookListener(YxmaSkill plugin) implements Listener {
 
         final Player player = (Player) event.getWhoClicked();
         final Inventory inventory = event.getClickedInventory();
+        final int slot = event.getSlot();
 
         if (inventory == null || inventory.getType() != InventoryType.PLAYER) {
             return;
@@ -97,7 +101,7 @@ public record SkillBookListener(YxmaSkill plugin) implements Listener {
             return;
         }
 
-        if (isSkillBook(event.getCurrentItem())) {
+        if (slot >= 6 && slot <= 8) {
             event.setCancelled(true);
         }
     }
@@ -105,6 +109,7 @@ public record SkillBookListener(YxmaSkill plugin) implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         event.getDrops().removeIf(this::isSkillBook);
+        event.getDrops().removeIf(item -> item.getType() == Material.BARRIER);
     }
 
     @EventHandler

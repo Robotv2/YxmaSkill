@@ -8,34 +8,35 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class EpeisteListener extends ClassesListener {
+public class PugilisteListener extends ClassesListener {
 
-    public EpeisteListener() {
-        super(ClassType.EPEISTE);
+    public PugilisteListener() {
+        super(ClassType.PUGILISTE);
     }
 
-    private void refreshStrength(GamePlayer gamePlayer) {
+    private void refreshResistance(GamePlayer gamePlayer) {
         final ConfigurationSection section = gamePlayer.getClassType().getSection();
 
         if(section == null || !gamePlayer.isValid()) {
             return;
         }
 
-        final double pourcentage = section.getDouble("strength." + gamePlayer.getLevel(), -1);
+        final double value = section.getDouble("resistance." + gamePlayer.getLevel(), -1);
 
-        if(pourcentage == -1) {
+        if(value == -1) {
             return;
         }
 
-        final AttributeInstance instance = gamePlayer.getPlayer().getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        final AttributeInstance instance = gamePlayer.getPlayer().getAttribute(Attribute.GENERIC_ARMOR);
         if(instance == null) return;
 
-        instance.setBaseValue(instance.getDefaultValue() * (1 + (pourcentage / 100)));
+        instance.setBaseValue(value / 10);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
@@ -43,13 +44,13 @@ public class EpeisteListener extends ClassesListener {
             return;
         }
 
-        this.refreshStrength(GamePlayer.getGamePlayer(player));
+        this.refreshResistance(GamePlayer.getGamePlayer(player));
     }
 
     @EventHandler
     public void onLevelUp(PlayerLevelUpEvent event) {
         final GamePlayer player = event.getGamePlayer();
         if(!this.hasClass(player)) return;
-        this.refreshStrength(player);
+        this.refreshResistance(player);
     }
 }

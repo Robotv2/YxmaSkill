@@ -13,3 +13,8 @@ skills:
       - "&7de vous !"
     damage: 5
     circle-radius: 7.5
+  epeiste-cone:
+    display: "&c&lCÔNE"
+    description:
+      - "&7à écrire"
+    range-radius: 5

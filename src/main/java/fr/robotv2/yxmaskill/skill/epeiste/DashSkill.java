@@ -93,7 +93,7 @@ public class DashSkill extends Skill implements Targettable {
             behindLocation = entityLocation;
         }
 
-        playerInvoker.teleportAsync(behindLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
+        playerInvoker.teleport(behindLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
         entity.damage(DAMAGE, playerInvoker);
 
         // Sound

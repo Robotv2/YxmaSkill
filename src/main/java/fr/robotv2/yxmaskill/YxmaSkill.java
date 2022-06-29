@@ -5,14 +5,23 @@ import com.j256.ormlite.support.ConnectionSource;
 import de.slikey.effectlib.EffectManager;
 import fr.robotv2.yxmaskill.command.YxmaSkillCommand;
 import fr.robotv2.yxmaskill.listeners.*;
+import fr.robotv2.yxmaskill.listeners.classes.EpeisteListener;
+import fr.robotv2.yxmaskill.listeners.classes.NoneListener;
+import fr.robotv2.yxmaskill.listeners.classes.PugilisteListener;
+import fr.robotv2.yxmaskill.listeners.classes.SniperListener;
 import fr.robotv2.yxmaskill.skill.Skill;
 import fr.robotv2.yxmaskill.skill.SkillManager;
 import fr.robotv2.yxmaskill.skill.epeiste.CircleSkill;
+import fr.robotv2.yxmaskill.skill.epeiste.ConeSkill;
 import fr.robotv2.yxmaskill.skill.epeiste.DashSkill;
+import fr.robotv2.yxmaskill.ui.GuiManager;
+import fr.robotv2.yxmaskill.ui.stock.ChangeClassGui;
 import fr.robotv2.yxmaskill.util.FileUtil;
 import fr.robotv2.yxmaskill.util.config.Config;
 import fr.robotv2.yxmaskill.util.config.ConfigAPI;
 import fr.robotv2.yxmaskill.util.rpgutil.LevelUtil;
+import net.minecraft.server.v1_16_R3.SpawnerCreature;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
@@ -45,6 +54,7 @@ public final class YxmaSkill extends JavaPlugin {
         this.loadSkills();
         this.loadListeners();
         this.loadCommands();
+        this.loadGuis();
 
         LevelUtil.loadConstant(getLevelConfiguration());
     }
@@ -98,16 +108,23 @@ public final class YxmaSkill extends JavaPlugin {
         getSkillManager().clearSkills();
         //EPEISTE
         getSkillManager().registerSkill(new DashSkill());
+        getSkillManager().registerSkill(new ConeSkill());
         getSkillManager().registerSkill(new CircleSkill());
     }
 
     private void loadListeners() {
         final PluginManager pm = getServer().getPluginManager();
+
         pm.registerEvents(new ExpChangeListener(), this);
         pm.registerEvents(new LevelUpListener(), this);
         pm.registerEvents(new PlayerJoinListener(this), this);
         pm.registerEvents(new PlayerQuitListener(this), this);
         pm.registerEvents(new SkillBookListener(this), this);
+
+        pm.registerEvents(new EpeisteListener(), this);
+        pm.registerEvents(new PugilisteListener(), this);
+        pm.registerEvents(new SniperListener(), this);
+        pm.registerEvents(new NoneListener(), this);
     }
 
     private void loadCommands() {
@@ -116,6 +133,11 @@ public final class YxmaSkill extends JavaPlugin {
         handler.registerValueResolver(Skill.class, context -> getSkillManager().getSkill(context.pop()));
         handler.getAutoCompleter().registerSuggestion("skills", getSkillManager().getSkillsId());
         handler.register(new YxmaSkillCommand(this));
+    }
+
+    private void loadGuis() {
+        getServer().getPluginManager().registerEvents(new GuiManager(), this);
+        GuiManager.addMenu(new ChangeClassGui());
     }
 
     // <<- CONFIGURATION ->>

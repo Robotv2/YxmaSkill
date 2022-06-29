@@ -1,5 +1,7 @@
 package fr.robotv2.yxmaskill.util;
 
+import com.j256.ormlite.stmt.QueryBuilder;
+
 import java.io.File;
 import java.io.IOException;
 

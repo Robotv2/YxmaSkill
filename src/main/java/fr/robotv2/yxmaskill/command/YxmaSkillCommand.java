@@ -1,10 +1,19 @@
 package fr.robotv2.yxmaskill.command;
 
 import fr.robotv2.yxmaskill.YxmaSkill;
+import fr.robotv2.yxmaskill.classes.ClassType;
 import fr.robotv2.yxmaskill.player.GamePlayer;
 import fr.robotv2.yxmaskill.skill.Skill;
+import fr.robotv2.yxmaskill.ui.GuiManager;
+import fr.robotv2.yxmaskill.ui.stock.ChangeClassGui;
 import org.bukkit.ChatColor;
-import revxrsal.commands.annotation.*;
+import org.bukkit.entity.Player;
+import revxrsal.commands.annotation.AutoComplete;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Description;
+import revxrsal.commands.annotation.Optional;
+import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.annotation.Usage;
 import revxrsal.commands.bukkit.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
@@ -34,5 +43,47 @@ public record YxmaSkillCommand(YxmaSkill plugin) {
 
         final GamePlayer invoker = GamePlayer.getGamePlayer(actor.requirePlayer());
         plugin.getSkillManager().cast(invoker, skill, true);
+    }
+
+    @Subcommand("changeclass")
+    @Usage("changeclass <class>")
+    @CommandPermission("yxmaskill.command.changeclass")
+    @Description("Change class anytime you want.")
+    public void onChangeClass(BukkitCommandActor actor, @Optional ClassType type, @Optional Player player) {
+
+        if (type == null) {
+            GuiManager.open(actor.requirePlayer(), ChangeClassGui.class);
+            return;
+        }
+
+        final GamePlayer invoker = GamePlayer.getGamePlayer(actor.requirePlayer());
+
+        if(invoker.getClassType() == type) {
+            invoker.getPlayer().sendMessage(ChatColor.RED + "Vous avez déjà cette classe.");
+        } else {
+            invoker.setClassType(type);
+            invoker.getPlayer().sendMessage(ChatColor.GREEN + "Vous venez de changer de classe !");
+        }
+    }
+
+    @Subcommand("setlevel")
+    @Usage("changeclass <class>")
+    @CommandPermission("yxmaskill.command.changeclass")
+    @Description("Change level of any player.")
+    public void onSetLevel(BukkitCommandActor actor, @Optional ClassType type) {
+
+        if (type == null) {
+            GuiManager.open(actor.requirePlayer(), ChangeClassGui.class);
+            return;
+        }
+
+        final GamePlayer invoker = GamePlayer.getGamePlayer(actor.requirePlayer());
+
+        if(invoker.getClassType() == type) {
+            invoker.getPlayer().sendMessage(ChatColor.RED + "Vous avez déjà cette classe.");
+        } else {
+            invoker.setClassType(type);
+            invoker.getPlayer().sendMessage(ChatColor.GREEN + "Vous venez de changer de classe !");
+        }
     }
 }

@@ -2,6 +2,7 @@ package fr.robotv2.yxmaskill.skill;
 
 import fr.robotv2.yxmaskill.player.GamePlayer;
 import fr.robotv2.yxmaskill.util.ColorUtil;
+import fr.robotv2.yxmaskill.util.PaperUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +56,7 @@ public class SkillManager {
         boolean result = false;
 
         if(skill instanceof Targettable targettableSkill) {
-            final Entity target = invoker.getPlayer().getTargetEntity(20, false);
+            final Entity target = PaperUtil.getTargetEntity(invoker.getPlayer(), 20);
             if (target instanceof LivingEntity livingEntity) {
                 result = targettableSkill.executeWithEntity(invoker, livingEntity);
             } else {

@@ -9,11 +9,12 @@ import fr.robotv2.yxmaskill.skill.Skill;
 import fr.robotv2.yxmaskill.util.rpgutil.LevelUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +27,7 @@ public class GamePlayer {
     private UUID playerUUID;
 
     @DatabaseField(columnName = "class")
-    private ClassType type;
+    private ClassType type = ClassType.NONE;
 
     @DatabaseField(columnName = "level")
     private int level = 1;
@@ -63,6 +64,17 @@ public class GamePlayer {
         return type;
     }
 
+    public void setClassType(ClassType type) {
+        this.type = type;
+
+        this.setExp(0);
+        this.setLevel(1);
+
+        refreshExpBar();
+        refreshHearts();
+        refreshSkillsItem();
+    }
+
     public void save() {
         YxmaSkill.getInstance().getDataManager().saveGamePlayer(this);
     }
@@ -88,7 +100,7 @@ public class GamePlayer {
     // <<- SKILL ->>
 
     public int getSkillLevel(Skill skill) {
-        return this.skillLevels.getOrDefault(skill.getId(), 0);
+        return this.skillLevels.getOrDefault(skill.getId(), 1);
     }
 
     public void setSkillLevel(Skill skill, int value) {
@@ -147,6 +159,7 @@ public class GamePlayer {
             final Skill skill = skills.pollFirst();
 
             if(skill == null) {
+                player.getInventory().setItem(i, new ItemStack(Material.BARRIER));
                 continue;
             }
 

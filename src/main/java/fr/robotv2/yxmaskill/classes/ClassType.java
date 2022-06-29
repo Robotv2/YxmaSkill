@@ -11,10 +11,10 @@ import java.util.LinkedList;
 
 public enum ClassType {
 
-    EPEISTE(),
-    PUGILISTE(),
-    SNIPER(),
-    NONE();
+    EPEISTE,
+    PUGILISTE,
+    SNIPER,
+    NONE;
 
     private final ConfigurationSection section;
     ClassType() {
