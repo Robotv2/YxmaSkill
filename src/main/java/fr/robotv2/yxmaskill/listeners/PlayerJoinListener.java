@@ -21,7 +21,7 @@ public record PlayerJoinListener(YxmaSkill plugin) implements Listener {
         GamePlayer gamePlayer = plugin.getDataManager().getGamePlayer(playerUUID);
 
         if(gamePlayer == null) {
-            gamePlayer = new GamePlayer(playerUUID, ClassType.EPEISTE);
+            gamePlayer = new GamePlayer(playerUUID, ClassType.NONE);
         }
 
         GamePlayer.registerGamePlayer(gamePlayer);

@@ -12,12 +12,24 @@ public class LevelUtil {
     private static double Z;
     private static double W;
 
+    public static double CHARAC_RESISTANCE;
+    public static double CHARAC_DEXTERITY;
+    public static double CHARAC_AGILITY;
+    public static double CHARAC_PRECISION;
+    public static double CHARAC_STRENGTH;
+
     public static void loadConstant(Config config) {
         final FileConfiguration configuration = config.get();
         X = configuration.getDouble("level-constant.X");
         Y = configuration.getInt("level-constant.Y");
         Z = configuration.getDouble("level-constant.Z");
         W = configuration.getDouble("level-constant.W");
+
+        CHARAC_RESISTANCE = configuration.getDouble("characteristic.resistance");
+        CHARAC_DEXTERITY = configuration.getDouble("characteristic.dexterity");
+        CHARAC_AGILITY = configuration.getDouble("characteristic.agility");
+        CHARAC_PRECISION = configuration.getDouble("characteristic.precision");
+        CHARAC_STRENGTH = configuration.getDouble("characteristic.strength");
     }
 
     public static double requiredExp(int level) {

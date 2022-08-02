@@ -25,11 +25,4 @@ public class ParticleUtil {
     public static void sendToAllPlayers(Particle particle, Location location, Particle.DustOptions data) {
         Collections.unmodifiableCollection(Bukkit.getOnlinePlayers()).forEach(player -> player.spawnParticle(particle, location, 1, data));
     }
-
-    public static void comboLine(Player player, int combo) {
-
-        if(combo < 0 || combo > 3) {
-            return;
-        }
-    }
 }

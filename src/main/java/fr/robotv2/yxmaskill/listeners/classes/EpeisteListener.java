@@ -8,6 +8,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class EpeisteListener extends ClassesListener {
@@ -35,7 +36,7 @@ public class EpeisteListener extends ClassesListener {
         instance.setBaseValue(instance.getDefaultValue() * (1 + (pourcentage / 100)));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
@@ -46,7 +47,7 @@ public class EpeisteListener extends ClassesListener {
         this.refreshStrength(GamePlayer.getGamePlayer(player));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onLevelUp(PlayerLevelUpEvent event) {
         final GamePlayer player = event.getGamePlayer();
         if(!this.hasClass(player)) return;

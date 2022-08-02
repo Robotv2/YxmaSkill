@@ -47,7 +47,7 @@ public class PugilisteListener extends ClassesListener {
         this.refreshResistance(GamePlayer.getGamePlayer(player));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onLevelUp(PlayerLevelUpEvent event) {
         final GamePlayer player = event.getGamePlayer();
         if(!this.hasClass(player)) return;

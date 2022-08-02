@@ -9,6 +9,7 @@ import fr.robotv2.yxmaskill.listeners.classes.EpeisteListener;
 import fr.robotv2.yxmaskill.listeners.classes.NoneListener;
 import fr.robotv2.yxmaskill.listeners.classes.PugilisteListener;
 import fr.robotv2.yxmaskill.listeners.classes.SniperListener;
+import fr.robotv2.yxmaskill.player.GamePlayer;
 import fr.robotv2.yxmaskill.skill.Skill;
 import fr.robotv2.yxmaskill.skill.SkillManager;
 import fr.robotv2.yxmaskill.skill.epeiste.CircleSkill;
@@ -20,8 +21,8 @@ import fr.robotv2.yxmaskill.util.FileUtil;
 import fr.robotv2.yxmaskill.util.config.Config;
 import fr.robotv2.yxmaskill.util.config.ConfigAPI;
 import fr.robotv2.yxmaskill.util.rpgutil.LevelUtil;
-import net.minecraft.server.v1_16_R3.SpawnerCreature;
-import org.bukkit.block.CreatureSpawner;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
@@ -130,7 +131,13 @@ public final class YxmaSkill extends JavaPlugin {
     private void loadCommands() {
         final BukkitCommandHandler handler = BukkitCommandHandler.create(this);
         handler.setLocale(Locale.FRANCE);
+
         handler.registerValueResolver(Skill.class, context -> getSkillManager().getSkill(context.pop()));
+        handler.registerValueResolver(GamePlayer.class, context -> {
+            final Player player = Bukkit.getPlayer(context.pop());
+            return player != null ? GamePlayer.getGamePlayer(player) : null;
+        });
+
         handler.getAutoCompleter().registerSuggestion("skills", getSkillManager().getSkillsId());
         handler.register(new YxmaSkillCommand(this));
     }

@@ -66,10 +66,8 @@ public class SkillManager {
             result = skill.execute(invoker);
         }
 
-        if(!result) {
-            return;
+        if(result) {
+            invoker.resetCooldown(skill);
         }
-
-        invoker.resetCooldown(skill);
     }
 }

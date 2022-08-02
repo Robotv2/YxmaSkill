@@ -72,6 +72,10 @@ public class ItemAPI {
         return head;
     }
 
+    public static ItemBuilder createSkullToBuilder(String url) {
+        return toBuilder(createSkull(url));
+    }
+
     public static ItemBuilder toBuilder(ItemStack item) {
         ItemBuilder builder = new ItemBuilder();
         builder.setMeta(item.getItemMeta());

@@ -14,10 +14,9 @@ import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class SniperListener extends ClassesListener{
@@ -45,7 +44,7 @@ public class SniperListener extends ClassesListener{
         instance.setBaseValue(instance.getDefaultValue() * (1 + (pourcentage / 100)));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
@@ -56,7 +55,7 @@ public class SniperListener extends ClassesListener{
         this.refreshSpeed(GamePlayer.getGamePlayer(player));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onLevelUp(PlayerLevelUpEvent event) {
         final GamePlayer player = event.getGamePlayer();
 
